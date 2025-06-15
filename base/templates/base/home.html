@@ -1,0 +1,161 @@
+{% extends 'base.html' %}
+
+{% block title %}Hello World - Django Social{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-lg-8">
+        <!-- Hero Section -->
+        <div class="text-center mb-5">
+            <h1 class="display-4 fw-bold text-primary mb-3">
+                <i class="bi bi-globe me-3"></i>Hello World!
+            </h1>
+            <p class="lead text-muted mb-4">
+                Welcome to Django Social - Your awesome social platform built with Django and Bootstrap!
+            </p>
+            <div class="d-flex justify-content-center gap-3">
+                <button class="btn btn-primary btn-lg">
+                    <i class="bi bi-rocket-takeoff me-2"></i>Get Started
+                </button>
+                <button class="btn btn-outline-secondary btn-lg">
+                    <i class="bi bi-info-circle me-2"></i>Learn More
+                </button>
+            </div>
+        </div>
+
+        <!-- Feature Cards -->
+        <div class="row g-4 mb-5">
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-primary bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-people-fill text-primary fs-4"></i>
+                        </div>
+                        <h5 class="card-title">Connect</h5>
+                        <p class="card-text text-muted">Build meaningful connections with people around the world.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-success bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-chat-dots-fill text-success fs-4"></i>
+                        </div>
+                        <h5 class="card-title">Share</h5>
+                        <p class="card-text text-muted">Share your thoughts, ideas, and moments with your network.</p>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card h-100 border-0 shadow-sm">
+                    <div class="card-body text-center">
+                        <div class="bg-warning bg-opacity-10 rounded-circle d-inline-flex align-items-center justify-content-center mb-3" style="width: 60px; height: 60px;">
+                            <i class="bi bi-star-fill text-warning fs-4"></i>
+                        </div>
+                        <h5 class="card-title">Discover</h5>
+                        <p class="card-text text-muted">Explore new content and discover amazing communities.</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Stats Section -->
+        <div class="bg-light rounded-3 p-4 mb-4">
+            <div class="row text-center">
+                <div class="col-md-3 col-6 mb-3">
+                    <h3 class="text-primary fw-bold mb-0">1,234</h3>
+                    <small class="text-muted">Active Users</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <h3 class="text-success fw-bold mb-0">5,678</h3>
+                    <small class="text-muted">Posts Shared</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <h3 class="text-warning fw-bold mb-0">9,012</h3>
+                    <small class="text-muted">Connections Made</small>
+                </div>
+                <div class="col-md-3 col-6 mb-3">
+                    <h3 class="text-info fw-bold mb-0">3,456</h3>
+                    <small class="text-muted">Communities</small>
+                </div>
+            </div>
+        </div>
+
+        <!-- Call to Action -->
+        <div class="text-center bg-gradient p-4 rounded-3" style="background: linear-gradient(45deg, #667eea, #764ba2);">
+            <h4 class="text-white mb-3">Ready to join our community?</h4>
+            <p class="text-white-50 mb-3">Start your social journey today and connect with amazing people!</p>
+            <button class="btn btn-light btn-lg">
+                <i class="bi bi-person-plus me-2"></i>Join Now
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Add some interactive animations
+    document.addEventListener('DOMContentLoaded', function() {
+        // Animate cards on hover
+        const cards = document.querySelectorAll('.card');
+        cards.forEach(card => {
+            card.addEventListener('mouseenter', function() {
+                this.style.transform = 'translateY(-5px)';
+                this.style.transition = 'all 0.3s ease';
+            });
+            card.addEventListener('mouseleave', function() {
+                this.style.transform = 'translateY(0)';
+            });
+        });
+
+        // Add click animations to buttons
+        const buttons = document.querySelectorAll('.btn');
+        buttons.forEach(button => {
+            button.addEventListener('click', function(e) {
+                // Create ripple effect
+                const ripple = document.createElement('span');
+                const rect = this.getBoundingClientRect();
+                const size = Math.max(rect.width, rect.height);
+                const x = e.clientX - rect.left - size / 2;
+                const y = e.clientY - rect.top - size / 2;
+                
+                ripple.style.width = ripple.style.height = size + 'px';
+                ripple.style.left = x + 'px';
+                ripple.style.top = y + 'px';
+                ripple.classList.add('ripple');
+                
+                this.appendChild(ripple);
+                
+                setTimeout(() => {
+                    ripple.remove();
+                }, 600);
+            });
+        });
+    });
+</script>
+
+<style>
+    .btn {
+        position: relative;
+        overflow: hidden;
+    }
+    
+    .ripple {
+        position: absolute;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.4);
+        transform: scale(0);
+        animation: ripple-animation 0.6s linear;
+        pointer-events: none;
+    }
+    
+    @keyframes ripple-animation {
+        to {
+            transform: scale(4);
+            opacity: 0;
+        }
+    }
+</style>
+{% endblock %}
