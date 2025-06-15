@@ -5,25 +5,14 @@
 
 {% block content %}
 <div class="row justify-content-center">
-    <!-- Chat Section -->
-    <div class="col-lg-8 col-xl-6">        <div class="card shadow-lg">
-            <div class="card-header bg-primary text-white">
-                <h4 class="mb-0 text-center">
+    <div class="col-lg-6 col-xl-5"><div class="card shadow-lg">
+            <div class="card-header bg-primary text-white">                <h4 class="mb-0 text-center">
                     <i class="bi bi-chat-dots me-2"></i>Live Chat
                     <span class="badge bg-light text-primary ms-2">{{ chat_messages.count }} messages</span>
-                </h4>                {% if user.is_authenticated %}
-                    <p class="text-center mb-0 mt-2 small">
-                        <i class="bi bi-person-check me-1"></i>Signed in as {{ current_user_profile.full_name|default:user.username }}
-                    </p>
-                {% else %}
-                    <p class="text-center mb-0 mt-2 small">
-                        <i class="bi bi-info-circle me-1"></i>Sign in to participate
-                    </p>
-                {% endif %}
+                </h4>
             </div>
-            <div class="card-body p-0">
-                <!-- Chat Messages -->
-                <div id="chat-messages" class="p-3" style="height: 500px; overflow-y: auto;">
+            <div class="card-body p-0">                <!-- Chat Messages -->
+                <div id="chat-messages" class="p-3" style="height: 500px; overflow-y: auto; background: #2a2a2a;">
                     {% if chat_messages %}                        {% for message in chat_messages reversed %}
                             <div class="chat-message mb-3" data-message-id="{{ message.pk }}">
                                 <!-- Reply indicator if this is a reply -->
@@ -120,7 +109,32 @@
                             <button type="submit" class="btn btn-primary">
                                 <i class="bi bi-send"></i>
                             </button>
-                        </form>                        <small class="text-muted">Press Enter to send • {{ chat_messages.count }} total messages</small>
+                        </form>
+                        <div class="mt-2 d-flex justify-content-between align-items-center">
+                            <small class="text-muted">Press Enter to send • {{ chat_messages.count }} total messages</small>
+                            {% if user.is_authenticated %}
+                                <div class="d-flex align-items-center">
+                                    {% if current_user_profile.profile_image %}
+                                        <img src="{{ current_user_profile.profile_image }}" alt="{{ current_user_profile.full_name }}" 
+                                             class="rounded-circle me-2" style="width: 20px; height: 20px; object-fit: cover;">
+                                    {% endif %}
+                                    <small class="text-muted me-2">
+                                        {{ current_user_profile.full_name|default:user.username }}
+                                        {% if current_user_profile.is_author %}
+                                            <span class="badge bg-warning text-dark ms-1" style="font-size: 0.6em;">
+                                                <i class="bi bi-star-fill"></i>
+                                            </span>
+                                        {% endif %}
+                                    </small>
+                                    <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn btn-outline-secondary btn-sm" title="Sign out">
+                                            <i class="bi bi-box-arrow-right"></i>
+                                        </button>
+                                    </form>
+                                </div>
+                            {% endif %}
+                        </div>
                     {% else %}
                         <div class="text-center py-3">
                             <p class="text-muted mb-3">
@@ -342,36 +356,37 @@
             transform: translateY(0);
         }
     }
-    
-    #chat-messages {
-        background: #f8f9fa;
-    }
-    
-    #chat-messages::-webkit-scrollbar {
+      #chat-messages::-webkit-scrollbar {
         width: 6px;
     }
     
     #chat-messages::-webkit-scrollbar-track {
-        background: #f1f1f1;
+        background: #404040;
         border-radius: 3px;
     }
     
     #chat-messages::-webkit-scrollbar-thumb {
-        background: #c1c1c1;
+        background: #666;
         border-radius: 3px;
     }
     
     #chat-messages::-webkit-scrollbar-thumb:hover {
-        background: #a8a8a8;
+        background: #777;
     }
-      .btn {
+    
+    .message-bubble:hover {
+        background: #404040 !important;
+        transition: background 0.2s ease;
+    }
+    
+    .btn {
         position: relative;
         overflow: hidden;
     }
     
     .reply-indicator {
-        border-left: 3px solid #007bff;
-        background-color: #f8f9fa;
+        border-left: 3px solid #667eea;
+        background-color: #3a3a3a !important;
     }
     
     .reply-btn {
@@ -385,9 +400,9 @@
     .message-bubble:hover .reply-btn {
         opacity: 1;
     }
-    
-    .reply-btn:hover {
-        background-color: #e9ecef !important;
+      .reply-btn:hover {
+        background-color: #555 !important;
+        color: #fff !important;
     }
 </style>
 {% endblock %}
