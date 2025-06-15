@@ -58,14 +58,20 @@
                         </a>
                     </li>                    {% if user.is_authenticated %}
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
-                                {% if current_user_profile.profile_image %}
+                            <a class="nav-link dropdown-toggle d-flex align-items-center" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">                                {% if current_user_profile.profile_image %}
                                     <img src="{{ current_user_profile.profile_image }}" alt="{{ current_user_profile.full_name }}" 
                                          class="rounded-circle me-2" style="width: 32px; height: 32px; object-fit: cover;">
                                 {% else %}
                                     <i class="bi bi-person-fill me-2"></i>
                                 {% endif %}
-                                {{ current_user_profile.full_name|default:user.username }}
+                                <span class="d-flex align-items-center">
+                                    {{ current_user_profile.full_name|default:user.username }}
+                                    {% if current_user_profile.is_author %}
+                                        <span class="badge bg-warning text-dark ms-2" style="font-size: 0.7em;">
+                                            <i class="bi bi-star-fill me-1"></i>Author
+                                        </span>
+                                    {% endif %}
+                                </span>
                             </a>
                             <ul class="dropdown-menu dropdown-menu-end">
                                 <li>

@@ -7,12 +7,20 @@ from .models import ChatMessage
 
 def get_user_profile_data(user):
     """
-    Get user's full name and profile image from Google
+    Get user's full name, profile image from Google, and author status
     """
     profile_data = {
         'full_name': user.get_full_name() or user.username,
-        'profile_image': None
+        'profile_image': None,
+        'is_author': False
     }
+    
+    # Check if user is author
+    try:
+        if hasattr(user, 'userprofile') and user.userprofile.is_author:
+            profile_data['is_author'] = True
+    except:
+        pass
     
     try:
         # Get Google social account data
@@ -42,19 +50,20 @@ def home(request):
     """
     # Get all chat messages with user profile data and replies
     chat_messages = ChatMessage.objects.select_related('user', 'reply_to__user').all()[:50]  # Latest 50 messages
-    
-    # Add profile data to each message
+      # Add profile data to each message
     enriched_messages = []
     for message in chat_messages:
         profile_data = get_user_profile_data(message.user)
         message.user_full_name = profile_data['full_name']
         message.user_profile_image = profile_data['profile_image']
+        message.user_is_author = profile_data['is_author']
         
         # Add reply_to profile data if it exists
         if message.reply_to:
             reply_profile_data = get_user_profile_data(message.reply_to.user)
             message.reply_to.user_full_name = reply_profile_data['full_name']
             message.reply_to.user_profile_image = reply_profile_data['profile_image']
+            message.reply_to.user_is_author = reply_profile_data['is_author']
         
         enriched_messages.append(message)
     
@@ -96,26 +105,27 @@ def send_message(request):
             
             # Get user profile data
             profile_data = get_user_profile_data(request.user)
-            
-            # Prepare reply data if exists
+              # Prepare reply data if exists
             reply_data = None
             if reply_to_message:
                 reply_profile_data = get_user_profile_data(reply_to_message.user)
                 reply_data = {
-                    'id': reply_to_message.id,
+                    'id': reply_to_message.pk,
                     'user': reply_profile_data['full_name'],
                     'message': reply_to_message.message[:50] + ('...' if len(reply_to_message.message) > 50 else ''),
-                    'profile_image': reply_profile_data['profile_image']
+                    'profile_image': reply_profile_data['profile_image'],
+                    'is_author': reply_profile_data['is_author']
                 }
             
             return JsonResponse({
                 'success': True,
                 'message': {
-                    'id': chat_message.id,
+                    'id': chat_message.pk,
                     'user': profile_data['full_name'],
                     'message': chat_message.message,
                     'timestamp': chat_message.timestamp.strftime('%H:%M'),
                     'profile_image': profile_data['profile_image'],
+                    'is_author': profile_data['is_author'],
                     'reply_to': reply_data
                 }
             })

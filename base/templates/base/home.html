@@ -37,7 +37,14 @@
                                             {% else %}
                                                 <i class="bi bi-person-fill me-1" style="font-size: 12px;"></i>
                                             {% endif %}
-                                            <span class="fw-bold me-1">{{ message.reply_to.user_full_name }}:</span>
+                                            <span class="fw-bold me-1 d-flex align-items-center">
+                                                {{ message.reply_to.user_full_name }}
+                                                {% if message.reply_to.user_is_author %}
+                                                    <span class="badge bg-warning text-dark ms-1" style="font-size: 0.5em;">
+                                                        <i class="bi bi-star-fill"></i>
+                                                    </span>
+                                                {% endif %}:
+                                            </span>
                                             <span class="text-truncate" style="max-width: 200px;">{{ message.reply_to.message }}</span>
                                         </div>
                                     </div>
@@ -53,9 +60,15 @@
                                         </div>
                                     {% endif %}
                                     <div class="flex-grow-1">
-                                        <div class="bg-light rounded-3 p-2 position-relative message-bubble" data-message-id="{{ message.pk }}" data-user="{{ message.user_full_name }}" data-message="{{ message.message }}">
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <small class="fw-bold text-primary">{{ message.user_full_name }}</small>
+                                        <div class="bg-light rounded-3 p-2 position-relative message-bubble" data-message-id="{{ message.pk }}" data-user="{{ message.user_full_name }}" data-message="{{ message.message }}">                                            <div class="d-flex justify-content-between align-items-center mb-1">
+                                                <small class="fw-bold text-primary d-flex align-items-center">
+                                                    {{ message.user_full_name }}
+                                                    {% if message.user_is_author %}
+                                                        <span class="badge bg-warning text-dark ms-2" style="font-size: 0.6em;">
+                                                            <i class="bi bi-star-fill me-1"></i>Author
+                                                        </span>
+                                                    {% endif %}
+                                                </small>
                                                 <div class="d-flex align-items-center">
                                                     <small class="text-muted me-2">{{ message.timestamp|time:"H:i" }}</small>
                                                     {% if user.is_authenticated %}
@@ -166,9 +179,13 @@
             })
         })
                 .then(response => response.json())                .then(data => {
-                    if (data.success) {
+                    if (data.success) {                        // Create user name with author badge if applicable
+                        const userNameHtml = data.message.is_author 
+                            ? `${data.message.user} <span class="badge bg-warning text-dark ms-2" style="font-size: 0.6em;"><i class="bi bi-star-fill me-1"></i>Author</span>`
+                            : data.message.user;
+                        
                         // Create profile image or default avatar
-                        const avatarHtml = data.message.profile_image 
+                        const avatarHtml = data.message.profile_image
                             ? `<img src="${data.message.profile_image}" alt="${data.message.user}" 
                                  class="rounded-circle me-2" style="width: 32px; height: 32px; min-width: 32px; object-fit: cover;">`
                             : `<div class="bg-primary rounded-circle d-flex align-items-center justify-content-center me-2" style="width: 32px; height: 32px; min-width: 32px;">
@@ -202,9 +219,8 @@
                                 <div class="d-flex align-items-start">
                                     ${avatarHtml}
                                     <div class="flex-grow-1">
-                                        <div class="bg-light rounded-3 p-2 position-relative message-bubble" data-message-id="${data.message.id}" data-user="${data.message.user}" data-message="${data.message.message}">
-                                            <div class="d-flex justify-content-between align-items-center mb-1">
-                                                <small class="fw-bold text-primary">${data.message.user}</small>
+                                        <div class="bg-light rounded-3 p-2 position-relative message-bubble" data-message-id="${data.message.id}" data-user="${data.message.user}" data-message="${data.message.message}">                                        <div class="d-flex justify-content-between align-items-center mb-1">
+                                            <small class="fw-bold text-primary d-flex align-items-center">${userNameHtml}</small>
                                                 <div class="d-flex align-items-center">
                                                     <small class="text-muted me-2">${data.message.timestamp}</small>
                                                     <button class="btn btn-sm btn-outline-secondary reply-btn" data-message-id="${data.message.id}" data-user="${data.message.user}" data-message="${data.message.message}" title="Reply">
