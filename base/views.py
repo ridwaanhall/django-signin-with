@@ -40,8 +40,8 @@ def home(request):
     """
     Home page view - displays the live chat page
     """
-    # Get all chat messages with user profile data
-    chat_messages = ChatMessage.objects.select_related('user').all()[:50]  # Latest 50 messages
+    # Get all chat messages with user profile data and replies
+    chat_messages = ChatMessage.objects.select_related('user', 'reply_to__user').all()[:50]  # Latest 50 messages
     
     # Add profile data to each message
     enriched_messages = []
@@ -49,6 +49,13 @@ def home(request):
         profile_data = get_user_profile_data(message.user)
         message.user_full_name = profile_data['full_name']
         message.user_profile_image = profile_data['profile_image']
+        
+        # Add reply_to profile data if it exists
+        if message.reply_to:
+            reply_profile_data = get_user_profile_data(message.reply_to.user)
+            message.reply_to.user_full_name = reply_profile_data['full_name']
+            message.reply_to.user_profile_image = reply_profile_data['profile_image']
+        
         enriched_messages.append(message)
     
     # Get current user profile data for navbar
@@ -70,22 +77,46 @@ def send_message(request):
     """
     if request.method == 'POST':
         message_text = request.POST.get('message', '').strip()
+        reply_to_id = request.POST.get('reply_to', '').strip()
+        
         if message_text:
+            # Handle reply
+            reply_to_message = None
+            if reply_to_id:
+                try:
+                    reply_to_message = ChatMessage.objects.get(id=reply_to_id)
+                except ChatMessage.DoesNotExist:
+                    pass
+            
             chat_message = ChatMessage.objects.create(
                 user=request.user,
-                message=message_text
+                message=message_text,
+                reply_to=reply_to_message
             )
             
             # Get user profile data
             profile_data = get_user_profile_data(request.user)
             
+            # Prepare reply data if exists
+            reply_data = None
+            if reply_to_message:
+                reply_profile_data = get_user_profile_data(reply_to_message.user)
+                reply_data = {
+                    'id': reply_to_message.id,
+                    'user': reply_profile_data['full_name'],
+                    'message': reply_to_message.message[:50] + ('...' if len(reply_to_message.message) > 50 else ''),
+                    'profile_image': reply_profile_data['profile_image']
+                }
+            
             return JsonResponse({
                 'success': True,
                 'message': {
+                    'id': chat_message.id,
                     'user': profile_data['full_name'],
                     'message': chat_message.message,
                     'timestamp': chat_message.timestamp.strftime('%H:%M'),
-                    'profile_image': profile_data['profile_image']
+                    'profile_image': profile_data['profile_image'],
+                    'reply_to': reply_data
                 }
             })
         else:

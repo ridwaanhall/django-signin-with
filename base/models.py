@@ -8,6 +8,7 @@ class ChatMessage(models.Model):
     user = models.ForeignKey(User, on_delete=models.CASCADE)
     message = models.TextField(max_length=500)
     timestamp = models.DateTimeField(default=timezone.now)
+    reply_to = models.ForeignKey('self', on_delete=models.CASCADE, null=True, blank=True, related_name='replies')
     
     class Meta:
         ordering = ['-timestamp']
