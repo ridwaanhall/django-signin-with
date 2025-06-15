@@ -154,3 +154,8 @@ STATIC_URL = 'static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 SOCIALACCOUNT_LOGIN_ON_GET = True
+
+# Login/Logout redirect URLs
+LOGIN_REDIRECT_URL = '/'  # Redirect to home page after login
+LOGOUT_REDIRECT_URL = '/'  # Redirect to home page after logout
+ACCOUNT_LOGOUT_REDIRECT_URL = '/'  # Allauth specific logout redirect
