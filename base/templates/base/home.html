@@ -59,7 +59,7 @@
                                                     {% endif %}
                                                 </small>
                                                 <div class="d-flex align-items-center">
-                                                    <small class="text-muted me-2">{{ message.timestamp|time:"H:i" }}</small>
+                                                    <small class="text-muted me-2" style="font-size: 0.75em;">{{ message.timestamp|date:"d/m/Y, H:i" }}</small>
                                                     {% if user.is_authenticated %}
                                                         <button class="btn btn-sm btn-outline-secondary reply-btn" data-message-id="{{ message.pk }}" data-user="{{ message.user_full_name }}" data-message="{{ message.message }}" title="Reply">
                                                             <i class="bi bi-reply" style="font-size: 10px;"></i>
@@ -236,7 +236,7 @@
                                         <div class="bg-light rounded-3 p-2 position-relative message-bubble" data-message-id="${data.message.id}" data-user="${data.message.user}" data-message="${data.message.message}">                                        <div class="d-flex justify-content-between align-items-center mb-1">
                                             <small class="fw-bold text-primary d-flex align-items-center">${userNameHtml}</small>
                                                 <div class="d-flex align-items-center">
-                                                    <small class="text-muted me-2">${data.message.timestamp}</small>
+                                                    <small class="text-muted me-2" style="font-size: 0.75em;">${data.message.timestamp}</small>
                                                     <button class="btn btn-sm btn-outline-secondary reply-btn" data-message-id="${data.message.id}" data-user="${data.message.user}" data-message="${data.message.message}" title="Reply">
                                                         <i class="bi bi-reply" style="font-size: 10px;"></i>
                                                     </button>

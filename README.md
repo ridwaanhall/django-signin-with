@@ -1,11 +1,20 @@
 # 🚀 Django Social - Live Chat Application
 
-A modern, real-time chat application built with Django, featuring Google OAuth authentication, reply system, and a beautiful dark mode interface.
+A modern, real-time chat application built with Django, featuring Google OAuth authentication, reply system, and a beautiful dark mode interface with minimalist design focused purely on chat functionality.
 
 ![Django](https://img.shields.io/badge/Django-5.2.3-092E20?style=flat&logo=django&logoColor=white)
 ![Python](https://img.shields.io/badge/Python-3.12+-3776AB?style=flat&logo=python&logoColor=white)
 ![Bootstrap](https://img.shields.io/badge/Bootstrap-5.3.0-7952B3?style=flat&logo=bootstrap&logoColor=white)
 ![License](https://img.shields.io/badge/License-MIT-green?style=flat)
+
+## 🆕 Latest Updates
+
+- ✅ **Full Date & Time Display** - Messages now show complete timestamps (DD/MM/YYYY, HH:MM)
+- ✅ **Minimalist UI** - Clean interface with only chat functionality
+- ✅ **Dark Mode Theme** - Beautiful dark mode with gradient backgrounds
+- ✅ **Integrated Sign-out** - Seamless sign-out button at chat bottom
+- ✅ **Author System** - Special recognition for site owners/authors
+- ✅ **Asia/Jakarta Timezone** - Proper timezone support for Indonesian users
 
 ## ✨ Features
 
@@ -21,13 +30,18 @@ A modern, real-time chat application built with Django, featuring Google OAuth a
 - **Message History** - Persistent chat history stored in database
 - **Auto-refresh** - Automatic chat updates every 30 seconds
 - **Message Counter** - Live count of total messages
+- **Date & Time Stamps** - Full date and time display (DD/MM/YYYY, HH:MM)
+- **Timezone Support** - Displays messages in Asia/Jakarta timezone
 
 ### 🎨 **Modern UI/UX**
 - **Dark Mode Interface** - Beautiful dark theme for better user experience
+- **Minimalist Design** - Clean, focused interface with only the chat card
 - **Responsive Design** - Works perfectly on desktop and mobile devices
 - **Smooth Animations** - Elegant fade-in animations for new messages
 - **Hover Effects** - Interactive message bubbles and buttons
 - **Custom Scrollbars** - Styled scrollbars that match the dark theme
+- **Centered Layout** - Full-screen gradient background with centered chat
+- **Integrated Sign-out** - Sign-out button seamlessly integrated at bottom
 
 ### 👑 **Author Management**
 - **Author Designation** - Mark specific users as site authors/owners
@@ -110,6 +124,11 @@ Visit `http://127.0.0.1:8000` to access the application.
 
 ### Author Management
 
+Check a user:
+```bash
+python manage.py shell -c "from django.contrib.auth.models import User; print('Available users:'); [print(f'- {user.username} ({user.email})') for user in User.objects.all()]"
+```
+
 Make a user an author:
 ```bash
 python manage.py make_author username
@@ -150,7 +169,8 @@ django-social/
 1. **Sign In**: Click "Sign in with Google" to authenticate
 2. **Send Messages**: Type your message and press Enter or click send
 3. **Reply to Messages**: Click the reply button on any message
-4. **Sign Out**: Use the sign out button at the bottom of the chat
+4. **View Timestamps**: All messages show full date and time (DD/MM/YYYY, HH:MM)
+5. **Sign Out**: Use the sign out button at the bottom of the chat
 
 ### Admin Features
 - **Make Authors**: Use management commands to designate authors
@@ -213,12 +233,15 @@ The application uses CSS custom properties for easy theming. Modify the CSS vari
 }
 ```
 
-### Features Extension
+### Features Extension Ideas
 - Add message editing functionality
 - Implement message deletion
 - Add file/image sharing
 - Create private messaging
 - Add emoji reactions
+- Message search functionality
+- User typing indicators
+- Message status (sent, delivered, read)
 
 ## 📄 License
 

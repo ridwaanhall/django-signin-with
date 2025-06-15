@@ -123,7 +123,7 @@ def send_message(request):
                     'id': chat_message.pk,
                     'user': profile_data['full_name'],
                     'message': chat_message.message,
-                    'timestamp': chat_message.timestamp.strftime('%H:%M'),
+                    'timestamp': chat_message.timestamp.strftime('%d/%m/%Y, %H:%M'),
                     'profile_image': profile_data['profile_image'],
                     'is_author': profile_data['is_author'],
                     'reply_to': reply_data
